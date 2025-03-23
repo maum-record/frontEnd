@@ -1,3 +1,8 @@
+<mac>
+brew install git-lfs
+git lfs install
+git lfs pull
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
