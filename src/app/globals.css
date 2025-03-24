@@ -1,5 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* 다크모드용 변수 선언 */
 :root {
   --background: #ffffff;
   --foreground: #171717;

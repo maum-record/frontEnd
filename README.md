@@ -1,36 +1,18 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<!-- 관리자 관련 -->
+/admin : 관리자 대시보드
+    /login: 관리자 로그인 화면 
+    /users: 사용자 관리
 
-## Getting Started
+<!-- 로그인 관련 -->
+/login: 기본 로그인 화면 -> 관리자 계정 로그인 시 /admin 페이지로 이동 // 일반 회원은 record 화면으로 이동
+/signup: 회원가입 페이지
+/profile: 회원정보 수정 페이지
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<!-- 회원 기능 관련 -->
+/record: 로그인 후 나오는 화면으로 녹음 시작 버튼 있음 -> 녹음 시작 버튼 클릭 시 권한 요청 후 녹음 -> 녹음 종료 버튼 클릭 시 녹음 시작 / 녹음 제출 버튼
+/result: 결과 화면 -> 녹음본의 요약본을 텍스트로 보여준 후 감정과 긍정/부정 지수 확인 가능한 창 + 캘린더로 이동 버튼
+/healing: 제공할 힐링 요소 선택 창으로 명상 / 요가 스트레칭 / 힐링 음악 감상 3가지 버튼 
+    /meditation: 명상 
+    /music: 힐링 음악 감상
+    /yoga: 요가 
+/analizing: 결과 대기 화면으로 정해진 시간 대기 후 이동 
