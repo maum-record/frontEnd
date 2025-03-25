@@ -9,10 +9,21 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     console.log("회원가입 정보:", { name, email, password });
-    router.push("/login");
+    const response = await fetch("http://localhost:8080/members/new",{
+      method:"POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+    if(response.ok){
+      console.log("회원가입 성공");
+      router.push("/login");
+    }else
+    console.log("회원가입 실패");
   };
 
   return (

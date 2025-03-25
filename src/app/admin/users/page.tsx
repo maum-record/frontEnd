@@ -21,7 +21,7 @@ function AdminUserPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch('/api/admin/users');
+        const res = await fetch('http://localhost:8080/admin/list');
         const data = await res.json();
         setUsers(data);
       } catch (err) {
