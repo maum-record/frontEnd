@@ -40,7 +40,7 @@ function AdminDashboardPage() {
 	useEffect(() => {
 	  const fetchStats = async () => {
 		try {
-		  const res = await fetch('https://api.maumrecord.com/admin/dashboard');
+		  const res = await fetch('https://localhost:8080/admin/dashboard');
 		  const data = await res.json();
 		  setStats(data);
 		} catch (err) {

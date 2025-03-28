@@ -39,7 +39,7 @@ function AdminUserPage() {
   useEffect(() => {
   	const fetchUsers = async () => {
   	  try {
-  		const res = await fetch('https://api.myproject.com/admin/users', {
+  		const res = await fetch('http://localhost:8080/admin/users', {
   		  headers: {
   			'Authorization': `Bearer ${accessToken}`,  // 토큰이 필요하다면
   		  },

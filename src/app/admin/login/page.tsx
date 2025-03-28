@@ -20,10 +20,10 @@ export default function AdminLoginPage() {
 	  } else {
 		setError('이메일 또는 비밀번호가 올바르지 않습니다.');
 	  }
-  
+	  //	어드민 로그인 별도 vs user 테이블에서 권한 체크크
 	  // ✅ 실제 백엔드 연동 예시
 	  // try {
-	  //   const res = await fetch('https://api.yourserver.com/admin/login', {
+	  //   const res = await fetch('https://localhost:8080/login', {
 	  //     method: 'POST',
 	  //     headers: {
 	  //       'Content-Type': 'application/json',

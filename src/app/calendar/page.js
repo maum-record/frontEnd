@@ -1,16 +1,18 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import HamburgerMenu from "@/app/components/HamburgerMenu";
+import ProfileIcon from "@/app/components/ProfileIcon";
+import FooterLogo from "@/app/components/FooterLogo";
 
 export default function CalendarPage() {
-  const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [emotionMap, setEmotionMap] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [customColor, setCustomColor] = useState("#ffeb3b");
   const [alpha, setAlpha] = useState(80);
   const [popupPos, setPopupPos] = useState({ x: 0, y: 0 });
+
+  const [monthlyFlowerData, setMonthlyFlowerData] = useState({});
 
   const cellRefs = useRef({});
   const popupRef = useRef(null);
@@ -21,6 +23,14 @@ export default function CalendarPage() {
   const firstDay = new Date(year, month, 1).getDay();
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
   const todayKey = new Date().toISOString().split("T")[0];
+
+  const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+
+  const allFlowerNames = [
+    "Cosmo", "Daffodil", "Daisy", "Lavender", "Lily",
+    "LilyOfTheValley", "Orchid", "Pansy", "Poppy", "Rose",
+    "Sunflower", "Tulip"
+  ];
 
   const changeMonth = (offset) => {
     const newDate = new Date(year, month + offset);
@@ -39,6 +49,48 @@ export default function CalendarPage() {
     const date = new Date(dateStr);
     return date.getFullYear() === year && date.getMonth() === month;
   });
+
+  const flowerGrid = monthlyFlowerData[monthKey]?.flowerGrid || Array(64).fill(null);
+  const plantedDays = monthlyFlowerData[monthKey]?.plantedDays || [];
+
+  useEffect(() => {
+    const newDatesToPlant = emotionDatesThisMonth.filter(
+      (date) => !plantedDays.includes(date)
+    );
+
+    if (newDatesToPlant.length === 0) return;
+
+    const newGrid = [...flowerGrid];
+    let availableIndexes = newGrid
+      .map((val, idx) => (val === null ? idx : null))
+      .filter((val) => val !== null);
+
+    let updated = false;
+
+    newDatesToPlant.forEach((date) => {
+      if (availableIndexes.length < 2) return;
+
+      const [f1, f2] = [...allFlowerNames].sort(() => 0.5 - Math.random()).slice(0, 2);
+      const [i1, i2] = [...availableIndexes].sort(() => 0.5 - Math.random()).slice(0, 2);
+
+      newGrid[i1] = f1;
+      newGrid[i2] = f2;
+
+      availableIndexes = availableIndexes.filter((idx) => idx !== i1 && idx !== i2);
+
+      updated = true;
+    });
+
+    if (updated) {
+      setMonthlyFlowerData((prev) => ({
+        ...prev,
+        [monthKey]: {
+          flowerGrid: newGrid,
+          plantedDays: [...plantedDays, ...newDatesToPlant],
+        },
+      }));
+    }
+  }, [emotionDatesThisMonth.join(","), monthKey]);
 
   useEffect(() => {
     if (selectedDate && cellRefs.current[selectedDate]) {
@@ -62,46 +114,11 @@ export default function CalendarPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-100 px-4 py-10">
-      {/* ☰ 햄버거 메뉴 */}
-      <button
-        className="absolute top-4 left-4 p-2 z-30"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="메뉴"
-      >
-        <div className="space-y-1">
-          <div className="w-6 h-0.5 bg-gray-800" />
-          <div className="w-6 h-0.5 bg-gray-800" />
-          <div className="w-6 h-0.5 bg-gray-800" />
-        </div>
-      </button>
+      <HamburgerMenu />
+      <ProfileIcon />
 
-      {menuOpen && (
-        <div className="absolute top-16 left-4 bg-white border rounded-md shadow-lg w-48 p-4 z-50 space-y-2">
-          <button
-            onClick={() => router.push("/profile")}
-            className="w-full text-left text-gray-700 hover:text-blue-600 font-semibold"
-          >
-            회원정보 수정
-          </button>
-          <button
-            onClick={() => router.push("/login")}
-            className="w-full text-left text-gray-700 hover:text-red-500 font-semibold"
-          >
-            로그아웃
-          </button>
-        </div>
-      )}
-
-      {/* 👤 프로필 */}
-      <img
-        src="/profile-default.png"
-        alt="프로필"
-        className="absolute top-4 right-4 w-12 h-12 rounded-full border bg-white object-cover z-20"
-      />
-
-      {/* 📅 본문 */}
       <div className="flex flex-col md:flex-row gap-4 mt-20 w-full max-w-4xl justify-between items-start mx-auto">
-        {/* 📅 캘린더 */}
+        {/* 캘린더 */}
         <div className="relative z-10 w-[350px]">
           <div className="flex items-center justify-center gap-4 mb-4">
             <button
@@ -155,25 +172,35 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        {/* 🌳 나무 자리 */}
-        <div className="w-[350px] h-[350px] border border-dashed border-gray-400 rounded-xl flex items-center justify-center text-gray-400">
-          나무 자리
+        {/* 꽃밭 */}
+        <div className="w-[350px] h-[350px] border border-dashed border-gray-400 rounded-xl grid grid-cols-8 grid-rows-8 overflow-hidden">
+          {flowerGrid.map((flower, i) => (
+            <div
+              key={i}
+              className="w-[43.75px] h-[43.75px] flex items-center justify-center"
+            >
+              {flower && (
+                <img
+                  src={`/flowers/${flower}.png`}
+                  alt={flower}
+                  className="w-6 h-6 object-contain"
+                  style={{ imageRendering: "pixelated" }}
+                  draggable={false}
+                />
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* 📦 감정 기록 카운트 */}
       <div className="absolute bottom-16 left-0 right-0 text-center z-20">
         <p className="text-xl font-bold text-gray-800">
           이달에 감정을 {emotionDatesThisMonth.length}일 기록하셨어요.
         </p>
       </div>
 
-      {/* 🔻 하단 로고 */}
-      <div className="absolute bottom-4 text-gray-400 text-sm opacity-60 text-center w-full">
-        MaumRecord
-      </div>
+      <FooterLogo />
 
-      {/* 🎨 팝업 */}
       {selectedDate && (
         <div
           ref={popupRef}

@@ -41,7 +41,7 @@ function UserDetailPage() {
     const fetchUserDetail = async () => {
       try {
 		/* 실제 fetch
-        const res = await fetch(`/api/admin/users/${id}`);
+        const res = await fetch(`http://localhost:8080//users/${id}`);
         const data = await res.json();
 		*/
 		const data = mockUser;

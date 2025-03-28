@@ -8,6 +8,7 @@ export default function ProfilePage() {
   const [nickname, setNickname] = useState("마음이");
   const [email, setEmail] = useState("user@maumrecord.com");
   const [preview, setPreview] = useState("/profile-default.png");
+  const [id,setId]=useState(0);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -27,11 +28,13 @@ export default function ProfilePage() {
     router.push("/record");
   };
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     const confirmDelete = confirm("정말로 계정을 삭제하시겠습니까?");
     if (confirmDelete) {
       // TODO: 백엔드로 삭제 요청 보내기
-      alert("계정이 삭제되었습니다. 안녕히 가세요!");
+        const response= await fetch(`http://localhost:8080/members/delete/${id}`);
+      if(response.ok)
+        alert("계정이 삭제되었습니다. 안녕히 가세요!");
       router.push("/login");
     }
   };
