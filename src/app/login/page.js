@@ -8,14 +8,33 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // 오류 메시지 초기화
 
-    // 관리자 로그인 분기 (임시)
-    if (email === "admin@maumrecord.com") {
-      router.push("/admin");
-    } else {
-      router.push("/record");
+    try {
+      const response = await fetch("http://localhost:8080//login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("로그인 실패: 이메일 또는 비밀번호를 확인하세요.");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.token); // JWT 저장
+
+      if (email === "admin@maumrecord.com") {
+        router.push("/admin"); // 관리자 페이지 이동
+      } else {
+        router.push("/record"); // 일반 사용자 페이지 이동
+      }
+    } catch (err) {
+      setError(err.message);
     }
   };
 
